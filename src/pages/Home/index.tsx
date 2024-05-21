@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext } from 'react'
 import { MainContent } from './MainContent'
 import { ProductCardComponent } from './ProductCardComponent'
 import {
@@ -6,21 +6,10 @@ import {
   ProductsContainer,
   TitleOfContainer,
 } from './styles'
+import { ProductsContext } from '../../context/ProductsContext'
 
 export function Home() {
-  const [products, setProducts] = useState([
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-  ])
-
-  console.log(products)
+  const { catalogProducts } = useContext(ProductsContext)
 
   return (
     <>
@@ -28,8 +17,18 @@ export function Home() {
       <ProductsContainer>
         <TitleOfContainer>Nossos Cafés</TitleOfContainer>
         <GridProductsContainer>
-          {products.map((product, index) => {
-            return <ProductCardComponent key={index} />
+          {catalogProducts.map((product) => {
+            return (
+              <ProductCardComponent
+                key={product.id}
+                characteristics={product.characteristics}
+                description={product.description}
+                image={product.image}
+                name={product.name}
+                price={product.price}
+                id={product.id}
+              />
+            )
           })}
         </GridProductsContainer>
       </ProductsContainer>
