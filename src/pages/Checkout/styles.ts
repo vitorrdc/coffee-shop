@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+interface PaymentOptionLabelProps {
+  checked: boolean
+}
+
 export const CheckoutContainer = styled.form`
   display: flex;
   justify-content: space-between;
@@ -149,15 +153,45 @@ export const PaymentButton = styled.button`
   }
 `
 
+export const PaymentMethodContainer = styled.div`
+  display: flex;
+  gap: 0.75rem;
+`
+
+export const PaymentOptionLabel = styled.label<PaymentOptionLabelProps>`
+  display: flex;
+  width: 13rem;
+  align-items: center;
+
+  gap: 0.75rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: ${(props) => props.theme.colors['base-button']};
+  font-size: ${(props) => props.theme.fonts['Roboto-Button-M']};
+  color: ${(props) => props.theme.colors['base-text']};
+
+  &:focus {
+    outline: 1px solid ${(props) => props.theme.colors['purple-dark']};
+  }
+`
+
 export const PaymentRadio = styled.input`
-  width: 2rem;
-  height: 2rem;
+  display: none;
 `
 
 export const SelectedsCoffees = styled.div`
   border-radius: 6px 44px 6px 44px;
   background-color: ${(props) => props.theme.colors['base-card']};
   padding: 2.5rem;
+`
+
+export const WithoutSelectedProducts = styled.div`
+  color: ${(props) => props.theme.colors['base-text']};
+  text-align: center;
+  padding-bottom: 2rem;
+  font-weight: 700;
 `
 
 export const SubTotalLineContainer = styled.div`

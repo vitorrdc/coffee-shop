@@ -15,14 +15,16 @@ import {
   DescriptionOfLabel,
   FormContainer,
   InputArea,
-  PaymentButton,
   PaymentFormContainer,
+  PaymentMethodContainer,
+  PaymentOptionLabel,
   PaymentRadio,
   SelectedsCoffees,
   SubTotalLineContainer,
   Subtitle,
   TotalLineContainer,
   UFInput,
+  WithoutSelectedProducts,
 } from './styles'
 import { Cart } from '../../components/Cart'
 import { useContext, useEffect, useState } from 'react'
@@ -31,16 +33,11 @@ import {
   SuccesPurchaseOrderType,
 } from '../../context/ProductsContext'
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export function Checkout() {
-  const {
-    selectedProducts,
-    setSuccessPurchaseOrder,
-    successPurchaseOrder,
-    setPaymentForm,
-    paymentForm,
-  } = useContext(ProductsContext)
+  const { selectedProducts, setSuccessPurchaseOrder } =
+    useContext(ProductsContext)
 
   const [totalProductsPrice, setTotalProductsPrice] = useState<
     number | null | string
@@ -54,7 +51,8 @@ export function Checkout() {
     currency: 'BRL',
   }
 
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, watch } = useForm()
+  const selectedPayment = watch('payment')
 
   const navigate = useNavigate()
 
@@ -87,17 +85,6 @@ export function Checkout() {
     }
   }
 
-  function handleCreditPaymentForm() {
-    setPaymentForm('CARTÃO DE CRÉDITO')
-  }
-
-  function handleDebitPaymentForm() {
-    setPaymentForm('CARTÃO DE DÉBITO')
-  }
-  function handleMoneyPaymentForm() {
-    setPaymentForm('DINHEIRO')
-  }
-
   useEffect(() => {
     sumTotalPrice()
   }, [selectedProducts])
@@ -110,13 +97,13 @@ export function Checkout() {
       numero: data.numero,
       uf: data.uf,
       cep: data.cep,
+      formaPagamento: data.formaPagamento,
     }
 
     setSuccessPurchaseOrder([newObj])
-  }
-  console.log(successPurchaseOrder)
 
-  console.log(paymentForm)
+    navigate('/success')
+  }
 
   return (
     <CheckoutContainer onSubmit={handleSubmit(onSubmit)}>
@@ -134,13 +121,13 @@ export function Checkout() {
             <CEPNumberAndNeighborhoodInput
               type="text"
               placeholder="CEP"
-              {...register('cep')}
+              {...register('cep', { required: true })}
             />
             <AdressInput type="text" placeholder="Rua" {...register('rua')} />
             <CEPNumberAndNeighborhoodInput
               type="text"
               placeholder="Número"
-              {...register('número')}
+              {...register('numero', { required: true })}
             />
             <ComplementInput
               type="text"
@@ -150,14 +137,18 @@ export function Checkout() {
             <CEPNumberAndNeighborhoodInput
               type="text"
               placeholder="Bairro"
-              {...register('bairro')}
+              {...register('bairro', { required: 'Preencha este campo.' })}
             />
             <CityInput
               type="text"
               placeholder="Cidade"
-              {...register('cidade')}
+              {...register('cidade', { required: true })}
             />
-            <UFInput type="text" placeholder="UF" {...register('uf')} />
+            <UFInput
+              type="text"
+              placeholder="UF"
+              {...register('uf', { required: true, maxLength: 2 })}
+            />
           </InputArea>
         </FormContainer>
         <PaymentFormContainer>
@@ -168,39 +159,72 @@ export function Checkout() {
           <DescriptionOfLabel>
             Informe o endereço onde deseja receber seu pedido
           </DescriptionOfLabel>
-          <div>
-            <PaymentButton onClick={handleCreditPaymentForm}>
+
+          <PaymentMethodContainer>
+            <PaymentOptionLabel
+              htmlFor="Cartão de Crédito"
+              checked={selectedPayment === 'crédito'}
+            >
+              <PaymentRadio
+                id="Cartão de Crédito"
+                type="radio"
+                value="Cartão de Crédito"
+                {...register('formaPagamento', { required: true })}
+              />
               <CreditCard size={16} color="#8047f8" />
               CARTÃO DE CRÉDITO
-            </PaymentButton>
-            <PaymentButton onClick={handleDebitPaymentForm}>
+            </PaymentOptionLabel>
+            <PaymentOptionLabel
+              htmlFor="Cartão de Débito"
+              checked={selectedPayment === 'débito'}
+            >
+              <PaymentRadio
+                id="Cartão de Débito"
+                type="radio"
+                value="Cartão de Débito"
+                {...register('formaPagamento', { required: true })}
+              />
               <Bank size={16} color="#8047f8" />
               CARTÃO DE DÉBITO
-            </PaymentButton>
-            <PaymentButton onClick={handleMoneyPaymentForm}>
+            </PaymentOptionLabel>
+            <PaymentOptionLabel
+              htmlFor="Dinheiro"
+              checked={selectedPayment === 'dinheiro'}
+            >
+              <PaymentRadio
+                id="Dinheiro"
+                type="radio"
+                value="Dinheiro"
+                {...register('formaPagamento', { required: true })}
+              />
               <Money size={16} color="#8047f8" />
               DINHEIRO
-            </PaymentButton>
-            {/* <label htmlFor="creditCart">CARTÃO DE CRÉDITO</label>
-            <PaymentRadio type="radio" {...register('creditCard')} /> */}
-          </div>
+            </PaymentOptionLabel>
+          </PaymentMethodContainer>
         </PaymentFormContainer>
       </div>
       <div>
         <Subtitle>Cafés selecionados</Subtitle>
         <SelectedsCoffees>
-          {selectedProducts.map((product) => {
-            return (
-              <Cart
-                amount={product.amount}
-                image={product.image}
-                name={product.name}
-                price={product.price.toLocaleString('pt-br', options)}
-                key={product.id}
-                id={product.id}
-              />
-            )
-          })}
+          {selectedProducts.length > 0 ? (
+            selectedProducts.map((product) => {
+              return (
+                <Cart
+                  amount={product.amount}
+                  image={product.image}
+                  name={product.name}
+                  price={product.price.toLocaleString('pt-br', options)}
+                  key={product.id}
+                  id={product.id}
+                />
+              )
+            })
+          ) : (
+            <WithoutSelectedProducts>
+              Ops! Não há produtos selecionados.
+            </WithoutSelectedProducts>
+          )}
+
           <SubTotalLineContainer>
             <div>Total dos itens</div>
             <span>{totalProductsPrice}</span>

@@ -34,6 +34,7 @@ export interface SuccesPurchaseOrderType {
   cidade: string
   uf: string
   cep: number
+  formaPagamento: string
 }
 
 interface CatalogProductsContextType {
