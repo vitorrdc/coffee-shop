@@ -2,13 +2,19 @@ import CoffeeDeliveryLogo from '../../assets/coffeeDeliveryLogo.png'
 
 import { MapPin, ShoppingCart } from '@phosphor-icons/react'
 import {
+  Badge,
   HeaderContainer,
   Locale,
   LocaleAndCartShoppingContainer,
+  ShoppingCartButton,
 } from './styles'
 import { NavLink } from 'react-router-dom'
+import { useContext } from 'react'
+import { ProductsContext } from '../../context/ProductsContext'
 
 export function Header() {
+  const { selectedProducts } = useContext(ProductsContext)
+
   return (
     <HeaderContainer>
       <NavLink to="/">
@@ -22,9 +28,16 @@ export function Header() {
         </Locale>
 
         <NavLink to="/checkout">
-          <button>
-            <ShoppingCart size={20} weight="fill" color="#C47F17" />
-          </button>
+          {selectedProducts.length > 0 ? (
+            <ShoppingCartButton>
+              <Badge>{selectedProducts.length}</Badge>
+              <ShoppingCart size={20} weight="fill" color="#C47F17" />
+            </ShoppingCartButton>
+          ) : (
+            <ShoppingCartButton>
+              <ShoppingCart size={20} weight="fill" color="#C47F17" />
+            </ShoppingCartButton>
+          )}
         </NavLink>
       </LocaleAndCartShoppingContainer>
     </HeaderContainer>

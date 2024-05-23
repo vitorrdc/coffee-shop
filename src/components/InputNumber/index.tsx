@@ -1,14 +1,24 @@
 import { Minus, Plus } from '@phosphor-icons/react'
 import { AddOrLessButton, ButtonContainer } from './styles'
 
-export function InputNumber() {
+interface InputNumberProps {
+  amount: number
+  onMinusProductFunction: React.MouseEventHandler
+  onAddProductFunction: React.MouseEventHandler
+}
+
+export function InputNumber({
+  amount,
+  onMinusProductFunction,
+  onAddProductFunction,
+}: InputNumberProps) {
   return (
     <ButtonContainer>
-      <AddOrLessButton>
+      <AddOrLessButton onClick={onMinusProductFunction}>
         <Minus size={16} color="#8047F8" className="minusIcon" />
       </AddOrLessButton>
-      <div>1</div>
-      <AddOrLessButton>
+      <div>{amount}</div>
+      <AddOrLessButton onClick={onAddProductFunction}>
         <Plus size={16} color="#8047F8" className="plusIcon" />
       </AddOrLessButton>
     </ButtonContainer>

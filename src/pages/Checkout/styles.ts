@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const CheckoutContainer = styled.div`
+export const CheckoutContainer = styled.form`
   display: flex;
   justify-content: space-between;
   margin-top: 2.5rem;
@@ -147,6 +147,11 @@ export const PaymentButton = styled.button`
   &:focus {
     outline: 1px solid ${(props) => props.theme.colors['purple-normal']};
   }
+`
+
+export const PaymentRadio = styled.input`
+  width: 2rem;
+  height: 2rem;
 `
 
 export const SelectedsCoffees = styled.div`

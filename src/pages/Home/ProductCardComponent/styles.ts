@@ -17,6 +17,11 @@ export const ProductCard = styled.div`
     margin-top: -1.25rem;
     padding-bottom: 0.75rem;
   }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 `
 
 export const Characteristics = styled.div`
@@ -64,7 +69,18 @@ export const Price = styled.div`
   color: ${(props) => props.theme.colors['base-title']};
 `
 
-export const ButtonShoppingCartIcon = styled.button`
+export const ButtonShoppingCartIconNormal = styled.button`
+  background-color: ${(props) => props.theme.colors['purple-normal']};
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  margin-left: 0.5rem;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors['purple-dark']};
+    transition: 00.2s;
+  }
+`
+export const ButtonShoppingCartIconDark = styled.button`
   background-color: ${(props) => props.theme.colors['purple-dark']};
   border-radius: 8px;
   padding: 0.5rem 0.6rem;

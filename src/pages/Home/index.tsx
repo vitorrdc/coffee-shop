@@ -22,7 +22,10 @@ export function Home() {
               <ProductCardComponent
                 key={product.id}
                 characteristics={product.characteristics}
+                secondCharacteristics={product.secondCharacteristics}
+                thirdCharacteristics={product.thirdCharacteristics}
                 description={product.description}
+                amount={product.amount}
                 image={product.image}
                 name={product.name}
                 price={product.price}

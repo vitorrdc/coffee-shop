@@ -1,5 +1,5 @@
 import {
-  ButtonShoppingCartIcon,
+  ButtonShoppingCartIconNormal,
   Characteristics,
   CoffeeTitle,
   FooterProductCard,
@@ -9,32 +9,70 @@ import {
   ProductDescription,
 } from './styles'
 
-import { ShoppingCart } from '@phosphor-icons/react'
-import { InputNumber } from '../../../components/InputNumber'
-import { ProductsType } from '../../../context/ProductsContext'
+import { Minus, Plus, ShoppingCart } from '@phosphor-icons/react'
+
+import { ProductsContext, ProductsType } from '../../../context/ProductsContext'
+
+import {
+  AddOrLessButton,
+  ButtonContainer,
+} from '../../../components/InputNumber/styles'
+import { useContext } from 'react'
 
 export function ProductCardComponent({
   image,
   characteristics,
+  secondCharacteristics,
+  thirdCharacteristics,
   name,
   description,
   price,
+  amount,
+  id,
 }: ProductsType) {
+  const { onAddProduct, onMinusProduct, addProductToShoppingCart } =
+    useContext(ProductsContext)
+
+  const priceFormatted = price
+    .toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL',
+    })
+    .replace('R$', '')
+
   return (
     <ProductCard>
       <img src={image} alt="" />
-      <Characteristics>{characteristics}</Characteristics>
+      <div>
+        <Characteristics>{characteristics}</Characteristics>
+        {secondCharacteristics && (
+          <Characteristics>{secondCharacteristics}</Characteristics>
+        )}
+        {thirdCharacteristics && (
+          <Characteristics>{thirdCharacteristics}</Characteristics>
+        )}
+      </div>
       <CoffeeTitle> {name}</CoffeeTitle>
       <ProductDescription>{description}</ProductDescription>
       <FooterProductCard>
         <PriceContent>
           <div>R$</div>
-          <Price>{price}</Price>
+          <Price>{priceFormatted}</Price>
         </PriceContent>
-        <InputNumber />
-        <ButtonShoppingCartIcon>
+        <ButtonContainer>
+          <AddOrLessButton onClick={() => onMinusProduct(id)}>
+            <Minus size={16} color="#8047F8" className="minusIcon" />
+          </AddOrLessButton>
+          <div>{amount}</div>
+          <AddOrLessButton onClick={() => onAddProduct(id)}>
+            <Plus size={16} color="#8047F8" className="plusIcon" />
+          </AddOrLessButton>
+        </ButtonContainer>
+        <ButtonShoppingCartIconNormal
+          onClick={() => addProductToShoppingCart(id)}
+        >
           <ShoppingCart size={17} color="#fafafa" weight="fill" />
-        </ButtonShoppingCartIcon>
+        </ButtonShoppingCartIconNormal>
       </FooterProductCard>
     </ProductCard>
   )

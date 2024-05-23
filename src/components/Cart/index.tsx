@@ -1,5 +1,5 @@
 import { Trash } from '@phosphor-icons/react'
-import Coffee from '../../assets/expresso.png'
+
 import { InputNumber } from '../InputNumber/index'
 import {
   CartContainer,
@@ -8,25 +8,45 @@ import {
   ItemPrice,
   ProductImage,
 } from './styles'
+import { useContext } from 'react'
+import { ProductsContext } from '../../context/ProductsContext'
 
-export function Cart() {
+export interface CartProps {
+  id: number
+  amount: number
+  image: string
+  name: string
+  price: any
+}
+
+export function Cart({ image, name, amount, price, id }: CartProps) {
+  const {
+    onAddSelectedProducts,
+    onMinusSelectedProducts,
+    removeItemFromShoppingCart,
+  } = useContext(ProductsContext)
+
   return (
     <div>
       <CartContainer>
         <div>
-          <ProductImage src={Coffee} alt="" />
+          <ProductImage src={image} alt="" />
           <ContentOfCartItem>
-            <span>Expresso Tradicional</span>
+            <span>{name}</span>
             <div>
-              <InputNumber />
-              <button>
+              <InputNumber
+                amount={amount}
+                onAddProductFunction={() => onAddSelectedProducts(id)}
+                onMinusProductFunction={() => onMinusSelectedProducts(id)}
+              />
+              <button onClick={() => removeItemFromShoppingCart(id)}>
                 <Trash size={16} color="#8047f8" />
                 REMOVER
               </button>
             </div>
           </ContentOfCartItem>
         </div>
-        <ItemPrice>R$ 9,90</ItemPrice>
+        <ItemPrice>{price}</ItemPrice>
       </CartContainer>
       <Divider />
     </div>
