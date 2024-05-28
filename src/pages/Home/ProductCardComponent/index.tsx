@@ -68,7 +68,9 @@ export function ProductCardComponent({
             <Plus size={16} color="#8047F8" className="plusIcon" />
           </AddOrLessButton>
         </ButtonContainer>
+
         <ButtonShoppingCartIconNormal
+          key={id}
           onClick={() => addProductToShoppingCart(id)}
         >
           <ShoppingCart size={17} color="#fafafa" weight="fill" />

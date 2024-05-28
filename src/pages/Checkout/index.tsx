@@ -34,6 +34,7 @@ import {
 } from '../../context/ProductsContext'
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import { ErrorMessage } from '@hookform/error-message'
 
 export function Checkout() {
   const { selectedProducts, setSuccessPurchaseOrder } =
@@ -51,14 +52,23 @@ export function Checkout() {
     currency: 'BRL',
   }
 
-  const { register, handleSubmit, watch } = useForm()
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
   const selectedPayment = watch('payment')
 
   const navigate = useNavigate()
 
-  function sumTotalPrice() {
+  useEffect(() => {
     const subTotalPrice = selectedProducts.map((product) => {
-      return product.amount * product.price
+      const priceAsNumber =
+        typeof product.price === 'number'
+          ? product.price
+          : parseFloat(product.price.replace(/[^\d.-]/g, ''))
+      return priceAsNumber * product.amount
     })
     const sumSubTotal = subTotalPrice.reduce((acc, curr) => acc + curr, 0)
 
@@ -83,11 +93,7 @@ export function Checkout() {
         }),
       )
     }
-  }
-
-  useEffect(() => {
-    sumTotalPrice()
-  }, [selectedProducts])
+  }, [selectedProducts, totalProductsPrice])
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     const newObj: SuccesPurchaseOrderType = {
@@ -121,33 +127,62 @@ export function Checkout() {
             <CEPNumberAndNeighborhoodInput
               type="text"
               placeholder="CEP"
-              {...register('cep', { required: true })}
+              className={errors.cep ? 'error' : ''}
+              {...register('cep', {
+                required: true,
+              })}
             />
-            <AdressInput type="text" placeholder="Rua" {...register('rua')} />
+
+            <AdressInput
+              type="text"
+              placeholder="Rua"
+              className={errors.rua ? 'error' : ''}
+              {...register('rua', {
+                required: true,
+              })}
+            />
+
             <CEPNumberAndNeighborhoodInput
               type="text"
               placeholder="Número"
-              {...register('numero', { required: true })}
+              className={errors.numero ? 'error' : ''}
+              {...register('numero', {
+                required: true,
+              })}
             />
+
             <ComplementInput
               type="text"
               placeholder="Complemento"
-              {...register('complemento')}
+              className={errors.complemento ? 'error' : ''}
+              {...register('complemento', { required: true })}
             />
             <CEPNumberAndNeighborhoodInput
               type="text"
               placeholder="Bairro"
-              {...register('bairro', { required: 'Preencha este campo.' })}
+              className={errors.bairro ? 'error' : ''}
+              {...register('bairro', {
+                required: true,
+              })}
             />
+
             <CityInput
               type="text"
               placeholder="Cidade"
-              {...register('cidade', { required: true })}
+              className={errors.cidade ? 'error' : ''}
+              {...register('cidade', {
+                required: true,
+              })}
             />
+
             <UFInput
               type="text"
               placeholder="UF"
-              {...register('uf', { required: true, maxLength: 2 })}
+              className={errors.uf ? 'error' : ''}
+              {...register('uf', {
+                required: true,
+                maxLength: 2,
+              })}
             />
           </InputArea>
         </FormContainer>
@@ -169,7 +204,9 @@ export function Checkout() {
                 id="Cartão de Crédito"
                 type="radio"
                 value="Cartão de Crédito"
-                {...register('formaPagamento', { required: true })}
+                {...register('formaPagamento', {
+                  required: 'Favor selecionar alguma forma de pagamento.',
+                })}
               />
               <CreditCard size={16} color="#8047f8" />
               CARTÃO DE CRÉDITO
@@ -182,7 +219,9 @@ export function Checkout() {
                 id="Cartão de Débito"
                 type="radio"
                 value="Cartão de Débito"
-                {...register('formaPagamento', { required: true })}
+                {...register('formaPagamento', {
+                  required: 'Favor selecionar alguma forma de pagamento.',
+                })}
               />
               <Bank size={16} color="#8047f8" />
               CARTÃO DE DÉBITO
@@ -195,12 +234,19 @@ export function Checkout() {
                 id="Dinheiro"
                 type="radio"
                 value="Dinheiro"
-                {...register('formaPagamento', { required: true })}
+                {...register('formaPagamento', {
+                  required: 'Favor selecionar alguma forma de pagamento.',
+                })}
               />
               <Money size={16} color="#8047f8" />
               DINHEIRO
             </PaymentOptionLabel>
           </PaymentMethodContainer>
+          <ErrorMessage
+            errors={errors}
+            name="formaPagamento"
+            render={({ message }) => <p>{message}</p>}
+          />
         </PaymentFormContainer>
       </div>
       <div>

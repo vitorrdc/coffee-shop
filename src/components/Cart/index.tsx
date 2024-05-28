@@ -16,7 +16,7 @@ export interface CartProps {
   amount: number
   image: string
   name: string
-  price: any
+  price: number | string
 }
 
 export function Cart({ image, name, amount, price, id }: CartProps) {
@@ -36,8 +36,9 @@ export function Cart({ image, name, amount, price, id }: CartProps) {
             <div>
               <InputNumber
                 amount={amount}
-                onAddProductFunction={() => onAddSelectedProducts(id)}
-                onMinusProductFunction={() => onMinusSelectedProducts(id)}
+                id={id}
+                onAddProductFunction={onAddSelectedProducts}
+                onMinusProductFunction={onMinusSelectedProducts}
               />
               <button onClick={() => removeItemFromShoppingCart(id)}>
                 <Trash size={16} color="#8047f8" />

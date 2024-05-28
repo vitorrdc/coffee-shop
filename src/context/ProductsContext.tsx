@@ -24,7 +24,7 @@ export interface ProductsType {
   name: string
   description: string
   amount: number
-  price: number
+  price: number | string
 }
 
 export interface SuccesPurchaseOrderType {
@@ -48,8 +48,14 @@ interface CatalogProductsContextType {
   onAddProduct: (data: number) => void
   onMinusProduct: (data: number) => void
   addProductToShoppingCart: (data: number) => void
-  onAddSelectedProducts: (data: number) => void
-  onMinusSelectedProducts: (data: number) => void
+  onAddSelectedProducts: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    data: number,
+  ) => void
+  onMinusSelectedProducts: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    data: number,
+  ) => void
   removeItemFromShoppingCart: (data: number) => void
 }
 
@@ -224,7 +230,11 @@ export function ProductsContextProvider({
     setCatalogProducts(newAmount)
   }
 
-  function onAddSelectedProducts(id: number) {
+  function onAddSelectedProducts(
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: number,
+  ) {
+    event.preventDefault()
     const newAmount = selectedProducts.map((product) => {
       if (product.id === id) {
         return { ...product, amount: product.amount + 1 }
@@ -245,7 +255,11 @@ export function ProductsContextProvider({
     setCatalogProducts(newAmount)
   }
 
-  function onMinusSelectedProducts(id: number) {
+  function onMinusSelectedProducts(
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: number,
+  ) {
+    event.preventDefault()
     const newAmount = selectedProducts.map((product) => {
       if (product.id === id && product.amount >= 1) {
         return { ...product, amount: product.amount - 1 }
@@ -254,7 +268,6 @@ export function ProductsContextProvider({
       return product
     })
     setSelectedProducts(newAmount)
-    console.log(selectedProducts)
   }
 
   function addProductToShoppingCart(id: number) {
@@ -272,17 +285,6 @@ export function ProductsContextProvider({
     )
     setSelectedProducts(newArrayOfShoppingCart)
   }
-
-  // function createSuccessPurchaseOrder(data: SuccesPurchaseOrderType) {
-  //   newObj = {
-  //     rua: data.rua,
-  //     numero: data.numero,
-  //     bairro: data.bairro,
-  //     cidade: data.cidade,
-  //     uf: data.uf,
-  //     formaPagamento: data.formaPagamento,
-  //   }
-  // }
 
   return (
     <ProductsContext.Provider

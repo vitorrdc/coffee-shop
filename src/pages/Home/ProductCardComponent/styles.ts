@@ -80,9 +80,3 @@ export const ButtonShoppingCartIconNormal = styled.button`
     transition: 00.2s;
   }
 `
-export const ButtonShoppingCartIconDark = styled.button`
-  background-color: ${(props) => props.theme.colors['purple-dark']};
-  border-radius: 8px;
-  padding: 0.5rem 0.6rem;
-  margin-left: 0.5rem;
-`

@@ -37,4 +37,10 @@ input, body {
   border: none;
 }
 
+p {
+  color: red ;
+  font-size: 0.75rem ;
+  padding: 0.5rem ;
+}
+
 `

@@ -61,6 +61,10 @@ export const CEPNumberAndNeighborhoodInput = styled.input`
     color: ${(props) => props.theme.colors['base-label']};
     font-size: ${(props) => props.theme.fonts['Roboto-Text-S']};
   }
+
+  &.error {
+    border: 1px solid red;
+  }
 `
 export const AdressInput = styled.input`
   background-color: ${(props) => props.theme.colors['base-input']};
@@ -73,6 +77,10 @@ export const AdressInput = styled.input`
     color: ${(props) => props.theme.colors['base-label']};
     font-size: ${(props) => props.theme.fonts['Roboto-Text-S']};
   }
+
+  &.error {
+    border: 1px solid red;
+  }
 `
 export const ComplementInput = styled.input`
   background-color: ${(props) => props.theme.colors['base-input']};
@@ -84,6 +92,10 @@ export const ComplementInput = styled.input`
   &::placeholder {
     color: ${(props) => props.theme.colors['base-label']};
     font-size: ${(props) => props.theme.fonts['Roboto-Text-S']};
+  }
+
+  &.error {
+    border: 1px solid red;
   }
 `
 
@@ -98,6 +110,10 @@ export const CityInput = styled.input`
     color: ${(props) => props.theme.colors['base-label']};
     font-size: ${(props) => props.theme.fonts['Roboto-Text-S']};
   }
+
+  &.error {
+    border: 1px solid red;
+  }
 `
 export const UFInput = styled.input`
   background-color: ${(props) => props.theme.colors['base-input']};
@@ -109,6 +125,10 @@ export const UFInput = styled.input`
   &::placeholder {
     color: ${(props) => props.theme.colors['base-label']};
     font-size: ${(props) => props.theme.fonts['Roboto-Text-S']};
+  }
+
+  &.error {
+    border: 1px solid red;
   }
 `
 
@@ -179,6 +199,11 @@ export const PaymentOptionLabel = styled.label<PaymentOptionLabelProps>`
 
 export const PaymentRadio = styled.input`
   display: none;
+`
+
+export const ErrorMessageStyle = styled.input`
+  color: ${(props) => props.theme.colors['yellow-light']};
+  font-size: ${(props) => props.theme.fonts['Roboto-Text-XS']};
 `
 
 export const SelectedsCoffees = styled.div`
