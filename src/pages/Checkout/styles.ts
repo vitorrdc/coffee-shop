@@ -1,9 +1,5 @@
 import styled from 'styled-components'
 
-interface PaymentOptionLabelProps {
-  checked: boolean
-}
-
 export const CheckoutContainer = styled.form`
   display: flex;
   justify-content: space-between;
@@ -45,7 +41,6 @@ export const DescriptionOfLabel = styled.span`
 `
 
 export const InputArea = styled.div`
-  /* padding: 2rem 0 0 0; */
   gap: 1rem;
   display: flex;
   flex-wrap: wrap;
@@ -152,33 +147,13 @@ export const PaymentFormContainer = styled.div`
     }
   }
 `
-export const PaymentButton = styled.button`
-  background-color: ${(props) => props.theme.colors['base-button']};
-  font-size: ${(props) => props.theme.fonts['Roboto-Button-M']};
-  color: ${(props) => props.theme.colors['base-text']};
-  border-radius: 8px;
-  padding: 1rem;
-
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-
-  &:hover {
-    background-color: ${(props) => props.theme.colors['base-hover']};
-    transition: 0.2s;
-  }
-
-  &:focus {
-    outline: 1px solid ${(props) => props.theme.colors['purple-normal']};
-  }
-`
 
 export const PaymentMethodContainer = styled.div`
   display: flex;
   gap: 0.75rem;
 `
 
-export const PaymentOptionLabel = styled.label<PaymentOptionLabelProps>`
+export const PaymentOptionLabel = styled.label`
   display: flex;
   width: 13rem;
   align-items: center;

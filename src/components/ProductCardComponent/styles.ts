@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+interface ShoppingCartButtonProps {
+  variant: 'primary' | 'secondary'
+}
+
 export const ProductCard = styled.div`
   background-color: ${(props) => props.theme.colors['base-card']};
   border-radius: 6px 36px 6px 36px;
@@ -69,7 +73,12 @@ export const Price = styled.div`
   color: ${(props) => props.theme.colors['base-title']};
 `
 
-export const ButtonShoppingCartIconNormal = styled.button`
+const buttonVariants = {
+  primary: '#8047F8',
+  secondary: '#4B2995',
+}
+
+export const ButtonShoppingCartIconNormal = styled.button<ShoppingCartButtonProps>`
   background-color: ${(props) => props.theme.colors['purple-normal']};
   border-radius: 8px;
   padding: 0.5rem 0.6rem;
@@ -77,6 +86,10 @@ export const ButtonShoppingCartIconNormal = styled.button`
 
   &:hover {
     background-color: ${(props) => props.theme.colors['purple-dark']};
-    transition: 00.2s;
+    transition: 0.2s;
   }
+
+  ${(props) => {
+    return `background-color:${buttonVariants[props.variant]}`
+  }}
 `

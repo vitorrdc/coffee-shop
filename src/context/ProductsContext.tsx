@@ -25,6 +25,7 @@ export interface ProductsType {
   description: string
   amount: number
   price: number | string
+  variant: 'primary' | 'secondary'
 }
 
 export interface SuccesPurchaseOrderType {
@@ -77,6 +78,7 @@ export function ProductsContextProvider({
       description: 'O tradicional café feito com água quente e grãos moídos',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 2,
@@ -86,6 +88,7 @@ export function ProductsContextProvider({
       description: 'Expresso diluído, menos intenso que o tradicional',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 3,
@@ -95,6 +98,7 @@ export function ProductsContextProvider({
       description: 'Café expresso tradicional com espuma cremosa',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 4,
@@ -105,6 +109,7 @@ export function ProductsContextProvider({
       description: 'Bebida preparada com café expresso e cubos de gelo',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 5,
@@ -115,6 +120,7 @@ export function ProductsContextProvider({
       description: 'Meio a meio de expresso tradicional com leite vaporizado',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 6,
@@ -126,6 +132,7 @@ export function ProductsContextProvider({
         'Uma dose de café expresso com o dobro de leite e espuma cremosa',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 7,
@@ -137,6 +144,7 @@ export function ProductsContextProvider({
         'Bebida com canela feita de doses iguais de café, leite e espuma',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 8,
@@ -148,6 +156,7 @@ export function ProductsContextProvider({
         'Café expresso misturado com um pouco de leite quente e espuma',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 9,
@@ -158,6 +167,7 @@ export function ProductsContextProvider({
       description: 'Café expresso com calda de chocolate, pouco leite e espuma',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 10,
@@ -169,6 +179,7 @@ export function ProductsContextProvider({
         'Bebida feita com chocolate dissolvido no leite quente e café',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 11,
@@ -181,6 +192,7 @@ export function ProductsContextProvider({
         'Drink gelado de café expresso com rum, creme de leite e hortelã',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 12,
@@ -190,6 +202,7 @@ export function ProductsContextProvider({
       description: 'Bebida adocicada preparada com café e leite de coco',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 13,
@@ -199,6 +212,7 @@ export function ProductsContextProvider({
       description: 'Bebida preparada com grãos de café árabe e especiarias',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
     {
       id: 14,
@@ -209,6 +223,7 @@ export function ProductsContextProvider({
       description: 'Bebida a base de café, uísque irlandês, açúcar e chantilly',
       amount: 1,
       price: 9.9,
+      variant: 'primary',
     },
   ])
 
@@ -271,12 +286,28 @@ export function ProductsContextProvider({
   }
 
   function addProductToShoppingCart(id: number) {
-    catalogProducts.map((product) => {
-      if (product.id === id) {
-        setSelectedProducts([...selectedProducts, product])
-      }
-      return selectedProducts
-    })
+    const productToFind = catalogProducts.find((product) => product.id === id)
+
+    if (productToFind) {
+      setSelectedProducts((prevState) => {
+        const productExists = prevState.some((product) => product.id === id)
+
+        if (!productExists) {
+          return [...prevState, { ...productToFind, variant: 'secondary' }]
+        } else {
+          return prevState.map((product) =>
+            product.id === id
+              ? { ...product, amount: product.amount + 1 }
+              : product,
+          )
+        }
+      })
+    }
+    setCatalogProducts((prevStateCatalogProducts) =>
+      prevStateCatalogProducts.map((product) =>
+        product.id === id ? { ...product, variant: 'secondary' } : product,
+      ),
+    )
   }
 
   function removeItemFromShoppingCart(id: number) {

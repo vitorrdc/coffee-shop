@@ -11,12 +11,9 @@ import {
 
 import { Minus, Plus, ShoppingCart } from '@phosphor-icons/react'
 
-import { ProductsContext, ProductsType } from '../../../context/ProductsContext'
+import { ProductsContext, ProductsType } from '../../context/ProductsContext'
 
-import {
-  AddOrLessButton,
-  ButtonContainer,
-} from '../../../components/InputNumber/styles'
+import { AddOrLessButton, ButtonContainer } from '../InputNumber/styles'
 import { useContext } from 'react'
 
 export function ProductCardComponent({
@@ -29,6 +26,7 @@ export function ProductCardComponent({
   price,
   amount,
   id,
+  variant,
 }: ProductsType) {
   const { onAddProduct, onMinusProduct, addProductToShoppingCart } =
     useContext(ProductsContext)
@@ -72,6 +70,7 @@ export function ProductCardComponent({
         <ButtonShoppingCartIconNormal
           key={id}
           onClick={() => addProductToShoppingCart(id)}
+          variant={variant}
         >
           <ShoppingCart size={17} color="#fafafa" weight="fill" />
         </ButtonShoppingCartIconNormal>

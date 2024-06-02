@@ -55,10 +55,8 @@ export function Checkout() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm()
-  const selectedPayment = watch('payment')
 
   const navigate = useNavigate()
 
@@ -196,10 +194,7 @@ export function Checkout() {
           </DescriptionOfLabel>
 
           <PaymentMethodContainer>
-            <PaymentOptionLabel
-              htmlFor="Cartão de Crédito"
-              checked={selectedPayment === 'crédito'}
-            >
+            <PaymentOptionLabel htmlFor="Cartão de Crédito">
               <PaymentRadio
                 id="Cartão de Crédito"
                 type="radio"
@@ -211,10 +206,7 @@ export function Checkout() {
               <CreditCard size={16} color="#8047f8" />
               CARTÃO DE CRÉDITO
             </PaymentOptionLabel>
-            <PaymentOptionLabel
-              htmlFor="Cartão de Débito"
-              checked={selectedPayment === 'débito'}
-            >
+            <PaymentOptionLabel htmlFor="Cartão de Débito">
               <PaymentRadio
                 id="Cartão de Débito"
                 type="radio"
@@ -226,10 +218,7 @@ export function Checkout() {
               <Bank size={16} color="#8047f8" />
               CARTÃO DE DÉBITO
             </PaymentOptionLabel>
-            <PaymentOptionLabel
-              htmlFor="Dinheiro"
-              checked={selectedPayment === 'dinheiro'}
-            >
+            <PaymentOptionLabel htmlFor="Dinheiro">
               <PaymentRadio
                 id="Dinheiro"
                 type="radio"
@@ -262,6 +251,7 @@ export function Checkout() {
                   price={product.price.toLocaleString('pt-br', options)}
                   key={product.id}
                   id={product.id}
+                  variant={product.variant}
                 />
               )
             })

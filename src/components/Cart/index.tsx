@@ -17,6 +17,7 @@ export interface CartProps {
   image: string
   name: string
   price: number | string
+  variant: 'primary' | 'secondary'
 }
 
 export function Cart({ image, name, amount, price, id }: CartProps) {

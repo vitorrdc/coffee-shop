@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { MainContent } from './MainContent'
-import { ProductCardComponent } from './ProductCardComponent'
+import { ProductCardComponent } from '../../components/ProductCardComponent'
 import {
   GridProductsContainer,
   ProductsContainer,
@@ -30,6 +30,7 @@ export function Home() {
                 name={product.name}
                 price={product.price}
                 id={product.id}
+                variant={product.variant}
               />
             )
           })}
