@@ -153,20 +153,25 @@ export const PaymentMethodContainer = styled.div`
   gap: 0.75rem;
 `
 
-export const PaymentOptionLabel = styled.label`
+export const PaymentOptionLabel = styled.label<{ checked: boolean }>`
   display: flex;
   width: 13rem;
   align-items: center;
 
   gap: 0.75rem;
   padding: 1rem;
-  border: none;
   border-radius: 8px;
   cursor: pointer;
   background-color: ${(props) => props.theme.colors['base-button']};
   font-size: ${(props) => props.theme.fonts['Roboto-Button-M']};
   color: ${(props) => props.theme.colors['base-text']};
+  border: 1px solid transparent;
 
+  ${({ checked }) =>
+    checked &&
+    `
+    border: 1px solid #8047F8;
+  `}
   &:focus {
     outline: 1px solid ${(props) => props.theme.colors['purple-dark']};
   }

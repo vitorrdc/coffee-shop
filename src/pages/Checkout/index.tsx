@@ -52,6 +52,8 @@ export function Checkout() {
     currency: 'BRL',
   }
 
+  const [selectedPayment, setSelectedPayment] = useState<string>('')
+
   const {
     register,
     handleSubmit,
@@ -107,6 +109,18 @@ export function Checkout() {
     setSuccessPurchaseOrder([newObj])
 
     navigate('/success')
+  }
+
+  function handleCreditCardPaymentForm() {
+    setSelectedPayment('Cartão de Crédito')
+  }
+
+  function handleDebitCardPaymentForm() {
+    setSelectedPayment('Cartão de Débito')
+  }
+
+  function handleMoneyPaymentForm() {
+    setSelectedPayment('Dinheiro')
   }
 
   return (
@@ -179,7 +193,6 @@ export function Checkout() {
               className={errors.uf ? 'error' : ''}
               {...register('uf', {
                 required: true,
-                maxLength: 2,
               })}
             />
           </InputArea>
@@ -194,7 +207,11 @@ export function Checkout() {
           </DescriptionOfLabel>
 
           <PaymentMethodContainer>
-            <PaymentOptionLabel htmlFor="Cartão de Crédito">
+            <PaymentOptionLabel
+              htmlFor="Cartão de Crédito"
+              checked={selectedPayment === 'Cartão de Crédito'}
+              onClick={handleCreditCardPaymentForm}
+            >
               <PaymentRadio
                 id="Cartão de Crédito"
                 type="radio"
@@ -206,7 +223,11 @@ export function Checkout() {
               <CreditCard size={16} color="#8047f8" />
               CARTÃO DE CRÉDITO
             </PaymentOptionLabel>
-            <PaymentOptionLabel htmlFor="Cartão de Débito">
+            <PaymentOptionLabel
+              htmlFor="Cartão de Débito"
+              checked={selectedPayment === 'Cartão de Débito'}
+              onClick={handleDebitCardPaymentForm}
+            >
               <PaymentRadio
                 id="Cartão de Débito"
                 type="radio"
@@ -218,7 +239,11 @@ export function Checkout() {
               <Bank size={16} color="#8047f8" />
               CARTÃO DE DÉBITO
             </PaymentOptionLabel>
-            <PaymentOptionLabel htmlFor="Dinheiro">
+            <PaymentOptionLabel
+              htmlFor="Dinheiro"
+              checked={selectedPayment === 'Dinheiro'}
+              onClick={handleMoneyPaymentForm}
+            >
               <PaymentRadio
                 id="Dinheiro"
                 type="radio"
