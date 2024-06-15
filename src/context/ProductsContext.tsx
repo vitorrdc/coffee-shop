@@ -14,6 +14,7 @@ import Hawaiian from '../assets/havaian.png'
 import Arabic from '../assets/arabic.png'
 import Irish from '../assets/irish.png'
 import { CartProps } from '../components/Cart'
+// import { PaypalLogo } from '@phosphor-icons/react'
 
 export interface ProductsType {
   id: number
@@ -250,6 +251,14 @@ export function ProductsContextProvider({
     id: number,
   ) {
     event.preventDefault()
+
+    // dispatch({
+    //   type: 'ON_ADD_SELECTED_PRODUCTS',
+    //   payload: {
+    //     id,
+    //   },
+    // })
+
     const newAmount = selectedProducts.map((product) => {
       if (product.id === id) {
         return { ...product, amount: product.amount + 1 }
@@ -302,6 +311,12 @@ export function ProductsContextProvider({
           )
         }
       })
+      // dispatch({
+      //   type: 'ADD_PRODUCT_TO_SHOPPING_CART',
+      //   payload: {
+      //     id,
+      //   },
+      // })
     }
     setCatalogProducts((prevStateCatalogProducts) =>
       prevStateCatalogProducts.map((product) =>
