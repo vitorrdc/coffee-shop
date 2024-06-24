@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useReducer, useState } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react'
 import TraditionalExpresso from '../assets/expresso.png'
 import AmericanExpress from '../assets/americanExpress.png'
 import Creamy from '../assets/creamy.png'
@@ -14,7 +20,13 @@ import Hawaiian from '../assets/havaian.png'
 import Arabic from '../assets/arabic.png'
 import Irish from '../assets/irish.png'
 import { CartProps } from '../components/Cart'
-// import { PaypalLogo } from '@phosphor-icons/react'
+import {
+  ActionTypes,
+  RemoveItemFromShoppingCartAction,
+  addProducttoShoppingCartAction,
+  onAddSelectedProductsAction,
+  onMinusSelectedProductsAction,
+} from '../reducer/actions'
 
 export interface ProductsType {
   id: number
@@ -65,7 +77,12 @@ interface ProductsContextProviderProps {
   children: ReactNode
 }
 
-
+interface ReducerActions {
+  type: string
+  payload: {
+    id: number
+  }
+}
 
 export const ProductsContext = createContext({} as CatalogProductsContextType)
 
@@ -231,48 +248,52 @@ export function ProductsContextProvider({
   ])
 
   const [selectedProducts, dispatch] = useReducer(
-    (state: ProductsType[], action: any) => {
-      if (action.type === 'ADD_PRODUCT_TO_SHOPPING_CART') {
-        const productToFind = catalogProducts.find(
-          (product) => product.id === action.payload.id,
-        )
-        const productExists = state.some(
-          (product) => product.id === action.payload.id,
-        )
-        if (!productExists) {
-          return [...state, { ...productToFind, variant: 'secondary' }]
-        } else {
+    (state: ProductsType[], action: ReducerActions): ProductsType[] => {
+      const productToFind: ProductsType | any = catalogProducts.find(
+        (product) => product.id === action.payload.id,
+      )
+      const productExists = state.some(
+        (product) => product.id === action.payload.id,
+      )
+      switch (action.type) {
+        case ActionTypes.ADD_PRODUCT_TO_SHOPPING_CART:
+          if (!productExists) {
+            return [...state, { ...productToFind, variant: 'secondary' }]
+          } else {
+            return state.map((product) =>
+              product.id === action.payload.id
+                ? { ...product, amount: product.amount + 1 }
+                : product,
+            )
+          }
+        case ActionTypes.ON_ADD_SELECTED_PRODUCTS:
           return state.map((product) =>
             product.id === action.payload.id
               ? { ...product, amount: product.amount + 1 }
               : product,
           )
-        }
+        case ActionTypes.ON_MINUS_SELECTED_PRODUCTS:
+          return state.map((product) =>
+            product.id === action.payload.id && product.amount >= 1
+              ? { ...product, amount: product.amount - 1 }
+              : product,
+          )
+        case ActionTypes.REMOVE_ITEM_FROM_SHOPPING_CART:
+          return state.filter((product) => product.id !== action.payload.id)
+        default:
+          return state
       }
-
-      if (action.type === 'ON_ADD_SELECTED_PRODUCTS') {
-        return state.map((product) => 
-        product.id === action.payload.id
-        ? {...product, amount: product.amount + 1}
-        : product
-        )
-      }
-      
-      if (action.type === 'ON_MINUS_SELECTED_PRODUCTS') {
-        return state.map((product) => 
-        product.id === action.payload.id && product.amount >= 1
-        ? {...product, amount: product.amount - 1}
-        : product
-        )
-      }
-
-      if (action.type === 'REMOVE_ITEM_FROM_SHOPPING_CART') {
-       return state.filter((product) => product.id !== action.payload.id)
-      }
-
-      return state
     },
     [],
+    () => {
+      const storedStateAsJSON = localStorage.getItem(
+        '@coffee-shop: shopping-cart-1.0.0',
+      )
+
+      if (storedStateAsJSON) {
+        return JSON.parse(storedStateAsJSON)
+      }
+    },
   )
 
   const [successPurchaseOrder, setSuccessPurchaseOrder] = useState<
@@ -289,8 +310,6 @@ export function ProductsContextProvider({
       return product
     })
     setCatalogProducts(newAmount)
-
- 
   }
 
   function onAddSelectedProducts(
@@ -299,20 +318,7 @@ export function ProductsContextProvider({
   ) {
     event.preventDefault()
 
-    dispatch({
-      type: 'ON_ADD_SELECTED_PRODUCTS',
-      payload: {
-        id,
-      },
-     })
-
-    // const newAmount = selectedProducts.map((product) => {
-    //   if (product.id === id) {
-    //     return { ...product, amount: product.amount + 1 }
-    //   }
-    //   return product
-    // })
-    // setSelectedProducts(newAmount)
+    dispatch(onAddSelectedProductsAction(id))
   }
 
   function onMinusProduct(id: number) {
@@ -331,66 +337,32 @@ export function ProductsContextProvider({
     id: number,
   ) {
     event.preventDefault()
-    // const newAmount = selectedProducts.map((product) => {
-    //   if (product.id === id && product.amount >= 1) {
-    //     return { ...product, amount: product.amount - 1 }
-    //   }
 
-    //   return product
-    // })
-    // setSelectedProducts(newAmount)
-    dispatch({
-      type: 'ON_MINUS_SELECTED_PRODUCTS',
-      payload: {
-        id,
-      },
-    })
+    dispatch(onMinusSelectedProductsAction(id))
   }
 
   function addProductToShoppingCart(id: number) {
     const productToFind = catalogProducts.find((product) => product.id === id)
 
     if (productToFind) {
-      // setSelectedProducts((prevState) => {
-      //   const productExists = prevState.some((product) => product.id === id)
-      //   if (!productExists) {
-      //     return [...prevState, { ...productToFind, variant: 'secondary' }]
-      //   } else {
-      //     return prevState.map((product) =>
-      //       product.id === id
-      //         ? { ...product, amount: product.amount + 1 }
-      //         : product,
-      //     )
-      //   }
-      // })
-      dispatch({
-        type: 'ADD_PRODUCT_TO_SHOPPING_CART',
-        payload: {
-          id,
-        },
-      })
+      dispatch(addProducttoShoppingCartAction(id))
     }
     setCatalogProducts((prevStateCatalogProducts) =>
       prevStateCatalogProducts.map((product) =>
         product.id === id ? { ...product, variant: 'secondary' } : product,
       ),
     )
-    
   }
 
   function removeItemFromShoppingCart(id: number) {
-    // const newArrayOfShoppingCart = selectedProducts.filter(
-    //   (product) => product.id !== id,
-    // )
-    // setSelectedProducts(newArrayOfShoppingCart)
-
-    dispatch({
-      type: 'REMOVE_ITEM_FROM_SHOPPING_CART',
-      payload: {
-        id
-      }
-    })
+    dispatch(RemoveItemFromShoppingCartAction(id))
   }
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(selectedProducts)
+
+    localStorage.setItem('@coffee-shop: shopping-cart-1.0.0', stateJSON)
+  }, [selectedProducts])
 
   return (
     <ProductsContext.Provider
